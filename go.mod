@@ -1,5 +1,7 @@
 module iris_demo
 
+go 1.14
+
 require (
 	github.com/Joker/jade v1.0.0 // indirect
 	github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4 // indirect
