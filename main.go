@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
+	"iris_demo/rest/user"
 )
 
 func main() {
@@ -30,8 +32,18 @@ func main() {
 	app.Get("/hello", func(ctx iris.Context) {
 		ctx.JSON(iris.Map{"message": "Hello Iris!"})
 	})
-	// http://localhost:8080
-	// http://localhost:8080/ping
-	// http://localhost:8080/hello
+
+	userPart := app.Party("/users", myAuthMiddlewareHandler)
+
+	userPart.Get("/message", user.GetUserMessage)
+
+	app.OnErrorCode(iris.StatusNotFound, func(context iris.Context) {
+		context.HTML("<h1>404!not found page!try again!</h1>")
+	})
 	app.Run(iris.Addr(":8086"), iris.WithoutServerError(iris.ErrServerClosed))
+}
+
+func myAuthMiddlewareHandler(ctx iris.Context) {
+	fmt.Println("9999")
+	ctx.Next()
 }
