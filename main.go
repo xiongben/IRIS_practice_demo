@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
@@ -44,6 +43,5 @@ func main() {
 }
 
 func myAuthMiddlewareHandler(ctx iris.Context) {
-	fmt.Println("9999")
 	ctx.Next()
 }

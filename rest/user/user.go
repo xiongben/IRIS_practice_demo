@@ -11,6 +11,6 @@ type UserInfo struct {
 }
 
 func GetUserMessage(ctx iris.Context) {
-	fmt.Print(ctx.Params().Get("name"))
+	fmt.Print(ctx.URLParams())
 
 }
