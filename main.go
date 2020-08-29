@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
+	"github.com/kataras/iris/mvc"
 	"iris_demo/rest/user"
+	"strconv"
 )
 
 func main() {
@@ -36,6 +39,8 @@ func main() {
 
 	userPart.Get("/message", user.GetUserMessage)
 
+	mvc.Configure(app.Party("/root"), myMVC)
+
 	app.OnErrorCode(iris.StatusNotFound, func(context iris.Context) {
 		context.HTML("<h1>404!not found page!try again!</h1>")
 	})
@@ -44,4 +49,33 @@ func main() {
 
 func myAuthMiddlewareHandler(ctx iris.Context) {
 	ctx.Next()
+}
+
+func myMVC(app *mvc.Application) {
+	app.Handle(new(MyController))
+}
+
+type MyController struct {
+}
+
+func (this *MyController) BeforeActivation(b mvc.BeforeActivation) {
+	b.Handle("GET", "/something/{id:long}", "MyCustomHandle")
+}
+
+func (this *MyController) Get() string {
+	return "hello, this is get method in root"
+}
+
+func (this *MyController) Post() string {
+	return "hello, this is post method in root"
+}
+
+func (this *MyController) MyCustomHandle(id int64) string {
+	s := "mycustomhandle says hello"
+	numstr := strconv.FormatInt(id, 10)
+	var buffer bytes.Buffer
+	buffer.WriteString(s)
+	buffer.WriteString(numstr)
+	a := buffer.String()
+	return a
 }
